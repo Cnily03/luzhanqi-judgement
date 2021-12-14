@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/theme.css">
+    <link rel="stylesheet" href="/css/s.css">
+    <script src="/js/utils.js" type="text/javascript"></script>
+    <script src="/js/s.js" type="text/javascript"></script>
+</head>
+
+<body>
+    
+    <div style="display:flex;width:100%;max-width:400px">
+        <div id="info" class="info" style="margin-top:5px">
+            <div class="info-title">房间信息</div>
+            <div class="info-line">
+                <div class="info-line-title">
+                    <label for="info-sid">房间ID</label>
+                </div>
+                <div class="info-line-content">
+                    <input type="text" id="info-sid" name="info-sid" data-click-copy="true" value="<%- sid %>" readonly>
+                </div>
+                <div class="info-line-content" style="max-width:min-content">
+                    <button id="copy-btn">复制</button>
+                </div>
+            </div>
+            <div class="info-line">
+                <div class="info-line-title">
+                    <label for="info-url">房间地址</label>
+                </div>
+                <div class="info-line-content">
+                    <input type="text" id="info-url" name="info-url" data-click-copy="true" value="<%- url %>" readonly>
+                </div>
+                <div class="info-line-content" style="max-width:min-content">
+                    <button id="copy-btn">复制</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="reset-game-holder" class="reset-game-holder">
+        <input type="checkbox" name="reset-game" id="reset-game" style="display:none">
+        <li class="icon-reset-game"></li>
+        <div style="width:1.5rem"></div>
+        <label for="reset-game" style="cursor:pointer">重置游戏</label>
+    </div>
+    
+    <div id="select-team" class="select-team">
+        <button id="black" style="color:#000">黑棋</button>
+        <button id="red" style="color:red">红棋</button>
+    </div>
+    
+    <div id="chess" class="chess-board disabled">
+        <% for(let chess_key of Object.keys(chess)) { %>
+        <button class="chess-btn" id="<%- chess_key %>"><%- chess[chess_key] %></button>
+        <% } %>
+        <div id="submit" class="submit-holder">
+            <button id="submit-chess" class="theme-button">提交并判定</button>
+        </div>
+    </div>
+    
+    <div id="message-box" class="message-box"></div>
+    <div id="_ws-port" style="display:none"><%= ws_port %></div>
+</body>
+
+</html>

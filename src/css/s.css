@@ -1,0 +1,277 @@
+:root {
+    --chess-btn-width: 7.5rem;
+    --default-team-color: #0078d4;
+    --team-color: var(--default-team-color);
+    --edge-of-chess-line-count: calc(20px + var(--chess-btn-width) * 6);
+}
+body {
+    margin: 0;
+    padding: 5px 10px;
+    font-size: 16px;
+}
+@media screen and (min-width: 740px) {
+    :root {
+        --chess-line-count: 6;
+    }
+}
+@media screen and (max-width: 740px) {
+    :root {
+        --chess-line-count: 4;
+    }
+}
+
+.select-team {
+    display: flex;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    width: 100%;
+}
+.select-team button {
+    display: block;
+    cursor: pointer;
+    outline: none;
+    width: 50%;
+    height: 2rem;
+    white-space: nowrap;
+    line-height: 1rem;
+    text-align: justify;
+    text-align-last: justify;
+    font-size: 1rem;
+    /* color: #32b643; */
+    padding: 0.1rem calc(25% - 1.5rem);
+    box-sizing: border-box;
+    background-color: #fff;
+    border: 1px solid #32b643;
+    border-radius: 0.1rem;
+    transition: color 0.2s, background-color 0.2s;
+}
+.select-team button.team-selected {
+    pointer-events: none;
+    background-color: #32b643 !important;
+}
+.select-team button:hover,
+.select-team button:focus {
+    outline: none;
+    color: #32b643;
+    background-color: rgba(50, 182, 67, 0.1);
+}
+.select-team button:active {
+    outline: none;
+    color: #fff;
+    background-color: #32b643;
+}
+
+.chess-board {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+    height: fit-content;
+}
+.chess-board.disabled button {
+    pointer-events: none;
+}
+.chess-board .chess-btn {
+    display: inline-block;
+    cursor: pointer;
+    width: calc(100% / var(--chess-line-count));
+    height: 3rem;
+    white-space: nowrap;
+    line-height: 1.2rem;
+    text-align: center;
+    font-size: 1.2rem;
+    color: var(--team-color);
+    margin: 0rem;
+    padding: 0.8rem auto;
+    box-sizing: border-box;
+    background-color: #fff;
+    border: 1px solid #0078d4;
+    border-radius: 0;
+    transition: color 0.2s, background-color 0.2s, box-shadow 0.2s;
+}
+.chess-board .chess-btn:hover,
+.chess-board .chess-btn:focus,
+.chess-board .chess-btn:active {
+    outline: none;
+    background-color: rgba(0, 120, 212, 0.1);
+}
+.chess-board .chess-btn:active {
+    outline: none;
+    box-shadow: 0 0 0 0.1rem inset rgba(0, 120, 212, 0.5);
+}
+.chess-board .chess-btn.chess-selected {
+    outline: none;
+    font-weight: bold;
+    background-color: rgba(0, 120, 212, 0.3);
+    box-shadow: 0 0 0 0.15rem inset rgba(0, 120, 212, 0.5);
+}
+
+.submit-holder {
+    width: 100%;
+}
+.submit-holder #submit-chess {
+    width: 100%;
+}
+
+.info {
+    display: block;
+    width: 100%;
+    background-color: #2e445f;
+    border-radius: 0.2rem;
+    padding: 0.5rem 1rem 1.2rem 1rem;
+    margin: 0.5rem 0rem;
+    color: #fff;
+}
+.info .info-title {
+    display: block;
+    width: 100%;
+    white-space: nowrap;
+    margin: 5px 2px;
+}
+.info .info-title {
+    display: inline-block;
+    margin-bottom: 0.5rem;
+    width: fit-content;
+    text-align: left;
+    font-size: 1.3rem;
+    font-weight: bold;
+}
+.info .info-line {
+    display: flex;
+    width: 100%;
+    height: fit-content;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    margin: 0.2rem 0rem 0.2rem 0.25rem;
+}
+.info .info-line .info-line-title {
+    font-size: 1rem;
+    display: inline-block;
+    max-width: 4.5rem;
+    min-width: 4.5rem;
+}
+.info .info-line .info-line-content {
+    display: inline-block;
+    width: 100%;
+}
+
+#info input {
+    display: block;
+    width: 100%;
+    height: 1.5rem;
+    text-align: left;
+    font-size: 1rem;
+    padding: 0.1rem 0.4rem;
+    box-sizing: border-box;
+    outline: none;
+    border-radius: 0.1rem;
+    border: 1px solid #0078d4;
+    background-color: rgba(45, 85, 133, 0.75);
+    color: #fff;
+    transition: border 0.2s, box-shadow 0.2s;
+}
+#info input[type="text"]:focus {
+    outline: none;
+    box-shadow: 0 0 0 0.05rem rgba(0, 120, 212, 0.5);
+}
+#info input[type="text"]:active {
+    outline: none;
+    box-shadow: 0 0 0 0.1rem rgba(0, 120, 212, 0.5);
+}
+#info #copy-btn {
+    display: block;
+    cursor: pointer;
+    width: min-content;
+    height: 100%;
+    white-space: nowrap;
+    line-height: 0.8rem;
+    text-align: center;
+    font-size: 0.8rem;
+    padding: 0.1rem 0.4rem;
+    box-sizing: border-box;
+    color: #fff;
+    background-color: rgba(0, 120, 212, 0.75);
+    border: 0px;
+    border-radius: 0.1rem;
+    transition: background-color 0.2s, box-shadow 0.2s;
+}
+#info #copy-btn.oncopy,
+#info #copy-btn:hover,
+#info #copy-btn:focus {
+    outline: none;
+    background-color: #0078d4;
+}
+#info #copy-btn:active {
+    outline: none;
+    background-color: #0078d4;
+    box-shadow: 0 0 0 0.1rem rgba(0, 120, 212, 0.5);
+}
+
+.message-box {
+    min-height: 6rem;
+    height: 20rem;
+    overflow: hidden visible;
+    padding: 0.3rem 0.5rem;
+    border: 1px solid #000;
+}
+
+.message-box .one-message {
+    display: block;
+    width: 100%;
+    height: fit-content;
+    margin-bottom: 0.1rem;
+}
+.message-box .one-message .message-time {
+    display: inline-block;
+    width: fit-content;
+    height: fit-content;
+    margin-right: 0.5rem;
+    color: #fc9a03;
+}
+.message-box .one-message.tag-default {
+    color: #0078d4;
+}
+.message-box .one-message.tag-black {
+    color: #000;
+}
+.message-box .one-message.tag-red {
+    color: #f00;
+}
+
+.reset-game-holder {
+    width: 100%;
+    height: 1.5rem;
+    display: flex;
+    text-align: center;
+    flex-wrap: nowrap;
+    justify-content: center;
+}
+.icon-reset-game {
+    list-style: none;
+}
+.icon-reset-game::before {
+    content: "";
+    display: block;
+    position: absolute;
+    z-index: 8;
+    width: 1.2rem;
+    height: 1.2rem;
+    border-radius: 0.6rem;
+    background-color: #0078d4;
+    transform: translate(0rem, 0.1rem);
+}
+.icon-reset-game::after {
+    content: "";
+    display: block;
+    position: absolute;
+    z-index: 9;
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 0.3rem;
+    background-color: #e06c75;
+    transform: translate(0.3rem, 0.4rem);
+    transition: background-color 0.2s;
+}
+input[type="checkbox"][name="reset-game"]:checked + .icon-reset-game::after {
+    background-color: #73c991;
+}
