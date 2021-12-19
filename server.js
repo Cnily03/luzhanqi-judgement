@@ -46,7 +46,7 @@ Object.keys(routes).forEach(_key => {
 
 // start the server
 app.listen(port, function () {
-    console.log("服务器启动成功！".success);
+    console.log(`Server is running at port ${port}...`.success);
 })
 
 module.exports = app;

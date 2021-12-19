@@ -10,7 +10,9 @@ function genSid() {
         new Date().getTime().toString().slice(4),
         "md5", cryption.random(4)
     );
-    cryptoStr = cryptoStr.split("").sort(() => { return parseInt(Math.random() * 2) * 2 - 1 }).join("");
+    cryptoStr = cryptoStr.split("").sort(() => {
+        return parseInt(Math.random() * 2) * 2 - 1
+    }).join("");
     let randomStr = cryption.random(16);
     for (let i = 0; i < 16; i++) {
         const index = parseInt(Math.random() * 3);
@@ -21,22 +23,34 @@ function genSid() {
     return !global.onLiveSid.includes(_sid) ? _sid : genSid();
 }
 
+function isLegalSid(_sid) {
+    if (_sid.length > 16 || _sid.length < 6 || !/^[0-9a-zA-Z]*$/.test(_sid))
+        return false;
+    else return true;
+}
+
 router.post(root + "/createRoom", async (ctx, next) => {
     const params = JSON.parse(ctx.request.body);
     if (params.sid.length) { // sid is not empty
-        if (params.sid.length > 16 || params.sid.length < 6
-            || !/^[0-9a-zA-Z]*$/.test(params.sid)) {
+        if (!isLegalSid(params.sid)) {
             ctx.body = {
                 connected: 1,
-                error: { code: "INVALID_SID", message: "房间号必须由 6-16 位的数字和字母构成" },
-                sid: ""
+                error: {
+                    code: "INVALID_SID",
+                    message: "房间号必须由 6-16 位的数字或字母构成"
+                },
+                sid: "",
+                url: ""
             }
             return;
         }
         if (global.onLiveSid.includes(params.sid)) {
             ctx.body = {
                 connected: 1,
-                error: { code: "REPEATED_SID", message: "房间号已存在！" },
+                error: {
+                    code: "REPEATED_SID",
+                    message: "房间号已存在！"
+                },
                 sid: params.sid,
                 url: ""
             }
@@ -48,9 +62,43 @@ router.post(root + "/createRoom", async (ctx, next) => {
     updateLiveInfo(sid);
     ctx.body = {
         connected: 1,
-        error: { code: "", message: "" },
+        error: {},
         sid: sid,
         url: ctx.request.header.origin + "/s/" + sid
+    }
+})
+
+router.post(root + "/getRoom", async (ctx, next) => {
+    const params = JSON.parse(ctx.request.body);
+    if (!isLegalSid(params.sid)) {
+        ctx.body = {
+            connected: 1,
+            error: {
+                code: "INVALID_SID",
+                message: "房间号必须由 6-16 位的数字或字母构成"
+            },
+            sid: "",
+            url: ""
+        }
+        return;
+    }
+    if (global.onLiveSid.includes(params.sid)) {
+        ctx.body = {
+            connected: 1,
+            error: {},
+            sid: params.sid,
+            url: ctx.request.header.origin + "/s/" + params.sid
+        }
+    } else {
+        ctx.body = {
+            connected: 1,
+            error: {
+                code: "NO_SUCH_SID",
+                message: "房间号不存在！"
+            },
+            sid: params.sid,
+            url: ""
+        }
     }
 })
 
