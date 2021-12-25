@@ -21,6 +21,7 @@ const chessIDs = Object.keys(chessJson);
  * @returns {string} `black` | `red` | `bothdie` | `invalid` | `error` | `allwin:black` | `allwin:red`
  */
 const judgeWinner = (blackId, redId, sid) => {
+    global.msgDeliver.chess = undefined;
     const notHuman = ["zhadan", "dilei", "junqi"];
     if (!notHuman.includes(blackId) && !notHuman.includes(redId)) {
         // only human
@@ -43,19 +44,29 @@ const judgeWinner = (blackId, redId, sid) => {
             (blackId == "junqi" && redId == "dilei") ||
             (blackId == "dilei" && redId == "junqi")
         ) return "error"; // junqi & dilei -> error
-        if (
-            (blackId == "junqi" && redId == "zhadan") ||
-            (blackId == "zhadan" && redId == "junqi")
-        ) return "bothdie"; // junqi & zhadan -> bothdie -> game rule changed
+        if (blackId == "junqi" && redId == "zhadan") {
+            // junqi & zhadan -> bothdie -> game rule changed
+            global.msgDeliver.chess = "junqi-boom:black";
+            return "bothdie";
+        }
+        if (blackId == "zhadan" && redId == "junqi") {
+            // junqi & zhadan -> bothdie -> game rule changed
+            global.msgDeliver.chess = "junqi-boom:red";
+            return "bothdie";
+        }
         if (
             (blackId == "junqi" && redId == "gongbing") ||
             (blackId == "gongbing" && redId == "junqi")
         ) return "invalid"; // gongbing cannot hold junqi
-        if (blackId == "junqi" && global.livePlayInfo[sid].count["black"]["dilei"] >= 3)
-            return "red"; // 3 dilei have been cleaned, junqi could be held
-        else if (redId == "junqi" && global.livePlayInfo[sid].count["red"]["dilei"] >= 3)
-            return "black"; // 3 dilei have been cleaned, junqi could be held
-        else return "invalid"; // there still remains dilei
+        if (blackId == "junqi" && global.livePlayInfo[sid].deathCount["black"]["dilei"] >= 3) {
+            // 3 dilei have been cleaned, junqi could be held
+            global.msgDeliver.chess = "junqi-holder:red";
+            return "red";
+        } else if (redId == "junqi" && global.livePlayInfo[sid].deathCount["red"]["dilei"] >= 3) {
+            // 3 dilei have been cleaned, junqi could be held
+            global.msgDeliver.chess = "junqi-holder:black";
+            return "black";
+        } else return "invalid"; // there still remains dilei
     }
 }
 

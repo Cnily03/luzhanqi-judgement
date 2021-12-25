@@ -44,7 +44,8 @@ const messageHandler = (conn, sid, ip, data) => {
             sendWS(sid, `join: ${_team} ${ip}`);
             if (["black", "red"].includes(_team)) {
                 let _chessid = global.livePlayInfo[sid].selectedChess[_team] || "none";
-                sendConn(conn, `local:team: ${_team} ${_chessid}`);
+                let _isReset = global.livePlayInfo[sid].resetReq[_team] ? "1" : "0";
+                sendConn(conn, `local:team: ${_team} ${_chessid} ${_isReset}`);
             };
             break;
         }
@@ -57,7 +58,8 @@ const messageHandler = (conn, sid, ip, data) => {
             }
             // already in the same the team
             if (global.livePlayInfo[sid].teamIP[_team].includes(ip)) {
-                sendConn(conn, `local:team: ${_team}`);
+                let _isReset = global.livePlayInfo[sid].resetReq[_team] ? "1" : "0";
+                sendConn(conn, `local:team: ${_team} ${_isReset}`);
                 return;
             };
             // clear ip in teamIP
@@ -70,8 +72,9 @@ const messageHandler = (conn, sid, ip, data) => {
             global.livePlayInfo[sid].teamIP[_team].push(ip);
             // check if it has selectedChess
             let _chessid = global.livePlayInfo[sid].selectedChess[_team] || "none";
+            let _isReset = global.livePlayInfo[sid].resetReq[_team] ? "1" : "0";
             // sned message
-            sendConn(conn, `local:team: ${_team} ${_chessid}`);
+            sendConn(conn, `local:team: ${_team} ${_chessid} ${_isReset}`);
             sendWS(sid, `team: ${_team} ${ip}`);
             break;
         }
@@ -98,28 +101,38 @@ const messageHandler = (conn, sid, ip, data) => {
                 // count failed chess
                 for (let __team of ["black", "red"])
                     if ([(__team == "black" ? "red" : "black"), "bothdie"].includes(_winner)) {
-                        global.livePlayInfo[sid].count[__team][
+                        global.livePlayInfo[sid].deathCount[__team][
                             global.livePlayInfo[sid].selectedChess[__team]
-                        ] = global.livePlayInfo[sid].count[__team][
+                        ] = global.livePlayInfo[sid].deathCount[__team][
                             global.livePlayInfo[sid].selectedChess[__team]
                         ] || 0;
-                        global.livePlayInfo[sid].count[__team][
+                        global.livePlayInfo[sid].deathCount[__team][
                             global.livePlayInfo[sid].selectedChess[__team]
                         ]++;
                     }
                 // send message
                 sendWS(sid, `win: ${_winner}`);
-                // if junqi was boomed
-                if (
-                    global.livePlayInfo[sid].selectedChess["black"] == "zhadan" &&
-                    global.livePlayInfo[sid].selectedChess["red"] == "junqi"
-                )
-                    sendWS(sid, `vanilla: :junqi-boom:red`);
-                else if (
-                    global.livePlayInfo[sid].selectedChess["black"] == "junqi" &&
-                    global.livePlayInfo[sid].selectedChess["red"] == "zhadan"
-                )
-                    sendWS(sid, `vanilla: :junqi-boom:black`);
+                // special situation: detect msgDeliver.chess
+                switch (global.msgDeliver.chess) {
+                    // if junqi was boomed
+                    case "junqi-boom:black": {
+                        sendWS(sid, `vanilla: :junqi-boom:black`);
+                        break;
+                    }
+                    case "junqi-boom:red": {
+                        sendWS(sid, `vanilla: :junqi-boom:red`);
+                        break;
+                    }
+                    // if junqi was held
+                    case "junqi-holder:black": {
+                        sendWS(sid, `vanilla: :junqi-holder:black`);
+                        break;
+                    }
+                    case "junqi-holder:red": {
+                        sendWS(sid, `vanilla: :junqi-holder:red`);
+                        break;
+                    }
+                }
                 // reset selectedChess
                 global.livePlayInfo[sid].selectedChess = {};
             }
@@ -142,7 +155,7 @@ const messageHandler = (conn, sid, ip, data) => {
             if (global.livePlayInfo[sid].resetReq["black"] && global.livePlayInfo[sid].resetReq["red"]) {
                 global.livePlayInfo[sid].resetReq = {};
                 global.livePlayInfo[sid].selectedChess = {};
-                global.livePlayInfo[sid].count = {
+                global.livePlayInfo[sid].deathCount = {
                     black: {},
                     red: {}
                 };

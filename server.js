@@ -15,6 +15,9 @@ const routes = {
 const staticDir = env === "development" ? "./src" : "./public";
 const viewsDir = env === "development" ? "./src/views" : "./views";
 
+// message deliver
+global.msgDeliver = {};
+
 // colors
 colors.setTheme({
     info: "cyan",

@@ -1,6 +1,7 @@
 const Router = require("koa-router");
 const router = new Router();
 const ws = require("nodejs-websocket");
+const wsconfig = require("./_config").WebSocket;
 const wsHandler = require("./s/wsHandler");
 const chess = require("./s/chess");
 const utils = require("./s/utils");
@@ -10,7 +11,7 @@ const sendWS = utils.sendWS;
 const root = "/s";
 
 global.ws = {};
-global.ws.port = 7021;
+global.ws.port = wsconfig.server_port;
 global.ws.server = ws.createServer((conn) => {
     conn.on("text", (data) => wsHandler.onmessage(conn, data));
     conn.on("close", (code, reason) => wsHandler.onclose(conn, code, reason));
@@ -32,7 +33,7 @@ router.get(root + "/:sid", async (ctx, next) => {
         chess: chess.chessJson,
         sid: sid,
         url: "http://" + ctx.request.header.host + path,
-        ws_port: global.ws.port
+        ws_url: (wsconfig.client_host || (ctx.hostname + ":" + global.ws.port)) + ctx.path
     });
 })
 

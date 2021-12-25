@@ -1,13 +1,16 @@
-const liveconfig = require("./_liveconfig");
+const liveconfig = require("../_config").live;
 const defaultPlayInfo = {
     connections: [],
     teamIP: {
         black: [],
         red: []
     },
-    resetReq: {},
+    resetReq: {
+        black: false,
+        red: false
+    },
     selectedChess: {},
-    count: {
+    deathCount: {
         black: {},
         red: {}
     }

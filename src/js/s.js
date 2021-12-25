@@ -8,8 +8,10 @@ const messages = {
         return str;
     },
     vanilla: {
-        ":junqi-boom:black": "<font color='#f00'>黑棋</font>方军旗被炸。",
-        ":junqi-boom:red": "<font color='#f00'>红棋</font>方军旗被炸。"
+        ":junqi-boom:black": "<font color='#000'>黑棋</font> 军旗被炸！",
+        ":junqi-boom:red": "<font color='#f00'>红棋</font> 军旗被炸！",
+        ":junqi-holder:black": "<font color='#f00'>红棋</font> 军旗被 <font color='#000'>黑棋</font> 夺去！",
+        ":junqi-holder:red": "<font color='#000'>黑棋</font> 军旗被 <font color='#f00'>红棋</font> 夺去！"
     },
     join: "%1s 加入了房间。",
     leave: "%1s 离开了房间。",
@@ -88,15 +90,19 @@ const updateTeam = (_team = globalTeam) => {
     document.documentElement.style.setProperty('--team-color', reflex.colormap[globalTeam]);
 }
 
+const setResetGameStatus = function (isReset) {
+    document.querySelector(`input[name='${CONFIG.name.resetGame}']`).checked = !!isReset;
+}
+
 const resetGame = () => {
     // reset select-chess
     changeToWaitChess();
     // reset reset-game
-    document.querySelector(`input[name='${CONFIG.name.resetGame}']`).checked = false;
+    setResetGameStatus(false);
 }
 
 const changeToWaitChess = () => {
-    // store back the isOnSubmit that
+    // store back isOnSubmit
     window.isOnSubmit = false;
     document.querySelector("#submit-chess").style.pointerEvents = "all";
     // reset select-chess
@@ -124,10 +130,7 @@ const messageBox = {
 }
 
 const wsHandler = () => {
-    window.ws = new WebSocket(
-        "ws://" + window.location.hostname + ":" +
-        window.ws_port + window.location.pathname
-    );
+    window.ws = new WebSocket("ws://" + window.ws_url);
     ws.onopen = (e) => {
         ws.send("join: ");
     }
@@ -187,11 +190,15 @@ const messageHandler = (time, data) => {
         case /^local:team: /.test(data): {
             let _dataArr = data.split("local:team: ")[1].trim().split(" ");
             let _team = _dataArr[0].trim(),
-                _chessid = _dataArr[1].trim();
+                _chessid = _dataArr[1].trim(),
+                _isReset = _dataArr[2].trim();
             updateTeam(_team);
             changeToWaitChess();
+            // chess btn
             if (_chessid != "none")
                 document.querySelector("#chess .chess-btn#" + _chessid).click();
+            // reset btn
+            setResetGameStatus(!!parseInt(_isReset));
             break;
         }
         case /^select: /.test(data): {
@@ -307,8 +314,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // message-box
     messageBox.element = document.querySelector("#" + CONFIG.id.messageBox);
     // WebSocket
-    window.ws_port = document.querySelector("#_ws-port").innerHTML;
-    document.body.removeChild(document.querySelector("#_ws-port"));
+    window.ws_url = document.querySelector("#_ws-url").innerHTML;
+    document.body.removeChild(document.querySelector("#_ws-url"));
     wsHandler();
     // select team
     for (let _dom of document.querySelector(".select-team").children) {
