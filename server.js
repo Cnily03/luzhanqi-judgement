@@ -1,4 +1,7 @@
-const env = (process.env.NODE_ENV || "production").trim();
+const env = global.env = (process.env.NODE_ENV || "production").trim();
+const isEnvDev = global.isEnvDev = env === "development" ? true : false;
+global.console.debug = global.isEnvDev ? console.log : () => {};
+
 const path = require("path");
 const Koa = require("koa");
 const bodyParser = require('koa-bodyparser');
@@ -12,8 +15,8 @@ const routes = {
     "/s/:sid": "s",
     "/operate": "operate"
 }
-const staticDir = env === "development" ? "./src" : "./public";
-const viewsDir = env === "development" ? "./src/views" : "./views";
+const staticDir = isEnvDev ? "./src" : "./public";
+const viewsDir = isEnvDev ? "./src/views" : "./views";
 
 // message deliver
 global.msgDeliver = {};

@@ -31,6 +31,8 @@ function isLegalSid(_sid) {
 
 router.post(root + "/createRoom", async (ctx, next) => {
     const params = JSON.parse(ctx.request.body);
+    params.sid = params.sid || "";
+    params.sid = params.sid.toString();
     if (params.sid.length) { // sid is not empty
         if (!isLegalSid(params.sid)) {
             ctx.body = {

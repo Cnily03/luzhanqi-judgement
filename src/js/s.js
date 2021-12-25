@@ -1,3 +1,7 @@
+window.console.debug = function () {
+    window.isEnvDev ? window.console.log(...arguments) : function () {}
+};
+
 const messages = {
     parse: function (str) {
         for (let i = 1; i < arguments.length; i++) {
@@ -145,7 +149,7 @@ const wsHandler = () => {
 }
 
 const messageHandler = (time, data) => {
-    console.log(data);
+    console.debug(data);
     switch (true) {
         case /^vanilla: /.test(data): {
             let _msg = data.split("vanilla: ")[1].trim();

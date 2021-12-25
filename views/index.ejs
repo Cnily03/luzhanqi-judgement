@@ -14,15 +14,13 @@
 
 <body>
     <div id="form-bar" class="form-bar">
-        <form action="" id="create-room" target="_form-target">
-            <div class="form-title">创建房间</div>
-            <input type="text" name="sid" class="theme-input" placeholder="自定义房间号，留空则随机分配" maxlength="15">
-            <input type="submit" name="submit" class="theme-button" value="创建">
-        </form>
-        <form action="" id="join-room" target="_form-target">
-            <div class="form-title">加入房间</div>
-            <input type="text" name="sid" class="theme-input" placeholder="请输入房间号" maxlength="15">
-            <input type="submit" name="submit" class="theme-button" value="加入">
+        <form action="" id="operate-room" target="_form-target">
+            <div class="form-title">创建或加入房间</div>
+            <input type="text" name="sid" class="theme-input" placeholder="请输入房间号，留空创建则随机分配" maxlength="15">
+            <div style="display:flex;flex-wrap:nowrap">
+                <input type="button" name="create" class="theme-button" value="创建">
+                <input type="button" name="join" class="theme-button" value="加入">
+            </div>
         </form>
     </div>
     <iframe name="_form-target" hidden></iframe>

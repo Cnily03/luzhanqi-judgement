@@ -178,7 +178,7 @@ const onmessage = (conn, data) => {
     updateLastTime(sid);
     // message handler
     messageHandler(conn, sid, ip, data);
-    console.log(global.livePlayInfo[sid]); // DEBUG
+    console.debug(global.livePlayInfo[sid]); // DEBUG
 }
 
 const onclose = (conn, code, reason) => {
@@ -195,7 +195,7 @@ const onclose = (conn, code, reason) => {
         );
     // Broadcast
     sendWS(sid, `leave: ${ip}`);
-    console.log(global.livePlayInfo[sid]); // DEBUG
+    console.debug(global.livePlayInfo[sid]); // DEBUG
     // After removing, if there's no connections...
     // if (global.livePlayInfo[sid].connections.length == 0) {};
 }
