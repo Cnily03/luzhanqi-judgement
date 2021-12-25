@@ -134,7 +134,10 @@ const messageBox = {
 }
 
 const wsHandler = () => {
-    window.ws = new WebSocket("ws://" + window.ws_url);
+    window.ws = new WebSocket({
+        "http": "ws://",
+        "https": "wss://"
+    } [window.location.protocol.split(":")[0]] + window.ws_url);
     ws.onopen = (e) => {
         ws.send("join: ");
     }

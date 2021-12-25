@@ -1,4 +1,4 @@
-const liveconfig = require("../_config").live;
+const liveconfig = require("../../_server.config").live;
 const defaultPlayInfo = {
     connections: [],
     teamIP: {

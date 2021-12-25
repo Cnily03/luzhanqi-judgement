@@ -13,7 +13,7 @@ module.exports = {
      * Settings of WebSoket
      */
     WebSocket: {
-        server_port: 7021,
-        client_host: "" // default: ctx.hostname + ":" + server_port
+        local_port: 7021,
+        visit_host: "" // default: ctx.hostname + ":" + local_port
     }
 }

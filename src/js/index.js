@@ -17,7 +17,7 @@ dom_form_create.onclick = () => {
             if (data.error.code) {
                 alert(data.error.message);
             } else {
-                window.open(data.url);
+                window.location.href = data.url;
             }
         },
         onerror: () => {
@@ -37,7 +37,7 @@ dom_form_join.onclick = () => {
             if (data.error.code) {
                 alert(data.error.message);
             } else {
-                window.open(data.url);
+                window.location.href = data.url
             }
         },
         onerror: () => {
@@ -57,7 +57,7 @@ dom_form.onsubmit = () => {
             if (data.error.code === "REPEATED_SID") {
                 dom_form_join.click();
             } else {
-                window.open(data.url);
+                window.location.href = data.url;
             }
         },
         onerror: () => {

@@ -1,7 +1,7 @@
 const Router = require("koa-router");
 const router = new Router();
 const ws = require("nodejs-websocket");
-const wsconfig = require("./_config").WebSocket;
+const wsconfig = require("../_server.config").WebSocket;
 const wsHandler = require("./s/wsHandler");
 const chess = require("./s/chess");
 const utils = require("./s/utils");
@@ -11,7 +11,7 @@ const sendWS = utils.sendWS;
 const root = "/s";
 
 global.ws = {};
-global.ws.port = wsconfig.server_port;
+global.ws.port = wsconfig.local_port;
 global.ws.server = ws.createServer((conn) => {
     conn.on("text", (data) => wsHandler.onmessage(conn, data));
     conn.on("close", (code, reason) => wsHandler.onclose(conn, code, reason));
@@ -23,6 +23,7 @@ global.livePlayInfo = {};
 global.connections = {};
 
 router.get(root + "/:sid", async (ctx, next) => {
+    const default_ws_host = ctx.hostname + ":" + global.ws.port;
     const sid = ctx.params.sid;
     const path = "/s/" + sid;
     if (!global.onLiveSid.includes(sid)) {
@@ -33,7 +34,7 @@ router.get(root + "/:sid", async (ctx, next) => {
         chess: chess.chessJson,
         sid: sid,
         url: "http://" + ctx.request.header.host + path,
-        ws_url: (wsconfig.client_host || (ctx.hostname + ":" + global.ws.port)) + ctx.path
+        ws_url: (wsconfig.visit_host || default_ws_host) + ctx.path
     });
 })
 
